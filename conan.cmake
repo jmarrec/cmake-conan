@@ -373,15 +373,19 @@ function(conan_cmake_install)
 
     if(ARGUMENTS_OUTPUT_QUIET)
       set(OUTPUT_CONTROL OUTPUT_QUIET)
+      # We wait until everything is done to flush conan_output
+      execute_process(COMMAND ${conan_command} ${conan_args}
+                      RESULT_VARIABLE return_code
+                      OUTPUT_VARIABLE conan_output
+                      ERROR_VARIABLE conan_output
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+      message(STATUS "${conan_output}")
+    else()
+      # Output stdout/stderr in real time
+      execute_process(COMMAND ${conan_command} ${conan_args}
+                      RESULT_VARIABLE return_code
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
     endif()
-
-    execute_process(COMMAND ${conan_command} ${conan_args}
-                     RESULT_VARIABLE return_code
-                     OUTPUT_VARIABLE conan_output
-                     ERROR_VARIABLE conan_output
-                     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-
-    message(STATUS "${conan_output}")
 
     if(NOT "${return_code}" STREQUAL "0")
       message(FATAL_ERROR "Conan install failed='${return_code}'")
