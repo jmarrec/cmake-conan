@@ -4,6 +4,7 @@ import os
 import platform
 import shutil
 
+from nose.plugins.attrib import attr
 
 def save(filename, content):
     try:
@@ -50,6 +51,7 @@ class CMakeConanTest(unittest.TestCase):
 set(CMAKE_CXX_ABI_COMPILED 1)
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(REQUIRES Hello/0.1@memsharded/testing
@@ -73,6 +75,7 @@ target_link_libraries(main ${CONAN_LIBS})
 set(CMAKE_CXX_ABI_COMPILED 1)
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(REQUIRES Hello/0.1@memsharded/testing
@@ -111,6 +114,7 @@ target_link_libraries(main ${CONAN_LIBS})
 set(CMAKE_CXX_ABI_COMPILED 1)
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(REQUIRES Hello/0.1@memsharded/testing
@@ -135,6 +139,7 @@ endforeach()
 set(CMAKE_CXX_ABI_COMPILED 1)
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(REQUIRES Hello/0.1@memsharded/testing
@@ -152,6 +157,7 @@ target_link_libraries(main CONAN_PKG::Hello)
 set(CMAKE_CXX_ABI_COMPILED 1)
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(REQUIRES Hello/0.1@memsharded/testing
@@ -175,6 +181,7 @@ target_link_libraries(main CONAN_PKG::Hello)
 set(CMAKE_CXX_ABI_COMPILED 1)
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(CONANFILE conanfile.txt
@@ -200,6 +207,7 @@ target_link_libraries(main CONAN_PKG::Hello)
 set(CMAKE_CXX_ABI_COMPILED 1)
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(CONANFILE conan/conanfile.py
@@ -237,6 +245,7 @@ class Pkg(ConanFile):
 set(CMAKE_CXX_ABI_COMPILED 1)
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 set(CONAN_EXPORTED ON)
 include(conan.cmake)
@@ -278,6 +287,7 @@ class Pkg(ConanFile):
         content = """message(STATUS "COMPILING-------")
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(REQUIRES Hello/0.1@memsharded/testing
@@ -296,12 +306,14 @@ target_link_libraries(main ${CONAN_LIBS})
         cmd = os.sep.join([".", "bin", "main"])
         run(cmd)
 
+    @attr("cmake39")
     def test_vs_toolset_host_x64(self):
         if platform.system() != "Windows":
             return
         content = """message(STATUS "COMPILING-------")
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(REQUIRES Hello/0.1@memsharded/testing
@@ -315,6 +327,7 @@ target_link_libraries(main ${CONAN_LIBS})
 
         os.makedirs("build")
         os.chdir("build")
+        # Only works cmake>=3.9
         run("cmake .. %s -T v140,host=x64 -DCMAKE_BUILD_TYPE=Release" % (generator))
         run("cmake --build . --config Release")
         cmd = os.sep.join([".", "bin", "main"])
@@ -326,6 +339,7 @@ target_link_libraries(main ${CONAN_LIBS})
 message(STATUS "COMPILING-------")
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(BASIC_SETUP
@@ -349,6 +363,7 @@ set(CMAKE_CXX_ABI_COMPILED 1)
 message(STATUS "COMPILING-------")
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(BASIC_SETUP
@@ -372,6 +387,7 @@ set(CMAKE_CXX_ABI_COMPILED 1)
 message(STATUS "COMPILING-------")
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(BASIC_SETUP
@@ -393,6 +409,7 @@ set(CMAKE_CXX_ABI_COMPILED 1)
 message(STATUS "COMPILING-------")
 cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 include(conan.cmake)
 conan_cmake_run(BASIC_SETUP
@@ -415,6 +432,7 @@ endif()
     def test_profile_auto(self):
         content = """cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 set(CONAN_DISABLE_CHECK_COMPILER ON)
 include(conan.cmake)
@@ -461,6 +479,7 @@ compiler.runtime=MTd""")
     def test_profile_auto_all(self):
         content = """cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 set(CONAN_DISABLE_CHECK_COMPILER ON)
 include(conan.cmake)
@@ -505,6 +524,7 @@ compiler.runtime=MTd""")
     def test_multi_profile(self):
         content = """cmake_minimum_required(VERSION 2.8)
 project(conan_wrapper CXX)
+message(STATUS "CMAKE VERSION: ${CMAKE_VERSION}")
 
 set(CONAN_DISABLE_CHECK_COMPILER ON)
 include(conan.cmake)
